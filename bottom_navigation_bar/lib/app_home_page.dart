@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'app_streamer.dart';
 import 'app_bottom_bar.dart';
+import 'providers/data_provider.dart';
+import 'providers/user_provider.dart';
 import 'tab_navigator.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -65,7 +68,10 @@ class _MyHomePageState extends State<MyHomePage> {
         return isFirstRouteInCurrentTab;
       },
       child: Scaffold(
-          body: _buildBody(),
+          body: MultiProvider(providers: [
+            ChangeNotifierProvider(create: (context) => UserProvider('1')),
+            ChangeNotifierProvider(create: (context) => DataProvider()),
+          ], child: _buildBody()),
           bottomNavigationBar: AppBottomNavigationBar(
             currentTab: _currentTab,
             onSelectTab: _selectTab,

@@ -1,5 +1,8 @@
+import 'package:bottom_navigation_bar/providers/data_provider.dart';
 import 'package:flutter/material.dart';
+import 'providers/user_provider.dart';
 import 'tab_navigator.dart';
+import 'package:provider/provider.dart';
 
 class ViewController extends StatefulWidget {
   final String title;
@@ -41,13 +44,15 @@ class _ViewControllerState extends State<ViewController> {
               onPressed: () {
                 widget.onPush(widget.title);
               },
-              child: Text(
-                'Click Here',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
-              ),
+              child: Consumer<UserProvider>(builder: (context, repo, _) {
+                return Text(
+                  repo.usercontainer.username,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                );
+              }),
             ),
           ),
           color: widget.title == tabName[TabItem.home]
@@ -78,15 +83,33 @@ class ControllerDetailPage extends StatelessWidget {
                 : this.title == tabName[TabItem.search]
                     ? Colors.black26
                     : Colors.black38,
-            child: Center(
-              child: Text(
-                '$title',
-                style: TextStyle(
-                    color: Colors.indigo,
-                    fontWeight: FontWeight.w500,
-                    fontStyle: FontStyle.italic,
-                    fontSize: 30),
-              ),
+            child: Column(
+              children: [
+                Center(
+                  child: Consumer<UserProvider>(
+                    builder: (context, repo, _) {
+                      return Center(
+                          child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(repo.usercontainer.username),
+                          SizedBox(
+                            height: 50.0,
+                          ),
+                          TextField(
+                            onChanged: (value) {
+                              repo.changeValue(value);
+                            },
+                          ),
+                        ],
+                      ));
+                    },
+                  ),
+                ),
+                Consumer<UserProvider>(builder: (context, repo, _) {
+                  return Container(child: Text(repo.usercontainer.username));
+                })
+              ],
             )));
   }
 }
